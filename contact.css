@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+::-webkit-scrollbar{
+    display: none;
+}
+
+body{
+    background-color: black;
+}
+
+.bg {
+    height: 100vh;
+    width: 100%;
+    background-image: url(img/ukelele.jpg);
+    background-size: cover;
+    background-position: center;
+    position: absolute;
+    z-index: -1;
+    filter: blur(10px);
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5vh;
+    padding-left: 7vh;
+    padding-right: 7vh;
+}
+
+.nav .nav-li {
+    display: flex;
+}
+
+.nav .nav-li li {
+    list-style: none;
+    padding-left: 5vh;
+}
+
+.nav .nav-li li a {
+    color: whitesmoke;
+    text-decoration: none;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    font-size: 1.2vw;
+}
+
+.nav .nav-li input {
+    max-width: 15vw;
+    margin-left: 5vh;
+    font-size: 1vw;
+    padding: 1vh;
+    margin-top: -1vh;
+    border: 2px solid whitesmoke;
+    border-radius: 10px;
+    background-color: rgba(245, 245, 245, 0.25);
+}
+
+.nav .nav-li input:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+
+}
+
+.nav h1 {
+    cursor: pointer;
+    color: whitesmoke;
+    font-family: 'Dancing Script', cursive;
+    font-size: 7vh;
+}
+
+
+
+.title{
+    color: whitesmoke;
+    font-size: 3vw;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+
+}
+
+.cont{  
+    width: 100%;
+    margin-top: 5vh;
+}
+
+.cont .name{
+    display: flex;
+    justify-content: center;
+}
+
+.cont .fname,.lname,.email,.textarea{
+    padding: 1vw;
+}
+
+.cont h1{
+    color: whitesmoke;
+    font-size: 2vw;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    margin-bottom: 4vh;
+}
+
+.cont .name input{
+    width: 18.5vw;
+}
+
+.cont input {
+    width: 20vw;
+    height: 4vh;
+    font-size: 1vw;
+    padding: 1vh;
+    color: whitesmoke;
+    margin-top: -1vh;
+    border: 2px solid whitesmoke;
+    border-radius: 10px;
+    background-color: rgba(245, 245, 245, 0.25);
+}
+
+.cont .email input{
+    width: 40vw;
+}
+
+.cont input:hover {
+    background-color: rgba(245, 245, 245, 0.5);
+}
+
+.cont textarea{
+    width: 40vw;
+    height: 10vh;
+    font-size: 1vw;
+    padding: 1vh;
+    color: whitesmoke;
+    margin-top: -1vh;
+    border: 2px solid whitesmoke;
+    border-radius: 10px;
+    background-color: rgba(245, 245, 245, 0.25);
+}
+
+textarea:hover{
+    background-color: rgba(245, 245, 245, 0.5);
+}
+
+.cont button{
+    padding: 2vh;
+}
+.cont button{
+    color: whitesmoke;
+    padding: 1.5vh;
+    background-color: rgba(245, 245, 245, 0.25);
+    border: 2px solid whitesmoke;
+    border-radius: 5px;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    font-size: 1vw;
+}
+
+.cont button:hover{
+    background-color: rgba(245, 245, 245, 0.5);
+}
+
+.aboutme{
+    margin-top: 10vh;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+    margin-left: 20vw;
+    margin-right: 20vw;
+}
+
+.aboutme h1{
+    color: whitesmoke;
+    margin: 2vh;
+}
+
+.aboutme .h1{
+    color: whitesmoke;
+    margin: 5vh;
+    font-size: 3vw;
+}
+
+.aboutme p{
+    color: whitesmoke;
+}

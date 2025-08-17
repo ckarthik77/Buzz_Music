@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.html">
+    <link rel="stylesheet" href="library.html">
+    <link rel="stylesheet" href="contact.css">
+    <link rel="stylesheet" href="img">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="./index.js"></script>
+    <div class="bg"></div>
+    <div class="nav">
+        <h1>BEATS</h1>
+        <div class="nav-li">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="library.html">LIBRARY</a></li>
+        </div>
+    </div>
+    <center>
+        <h1 class="title">CONTACT US</h1>
+    </center>
+    <center>
+        <div class="cont">
+            <div class="name">
+                <div class="fname">
+                    <h1>First Name</h1>
+                    <input id="fname" type="text">
+                </div>
+                <div class="lname">
+                    <h1>Second Name</h1>
+                    <input id="lname" type="text">
+                </div>
+            </div>
+            <div class="email">
+                <h1>Email Address</h1>
+                <input id="email" type="text">
+            </div>
+            <div class="textarea">
+                <h1>How Can We Help!</h1>
+                <textarea id="content" name="textarea" id="" cols="30" rows="10"></textarea>
+            </div>
+            <button id="btn" onclick="scrollWin(),send()">SUBMIT</button>
+        </div>
+
+        <div class="aboutme">
+            <h1 class="h1">ABOUT US</h1>
+            <p>Welcome to "Beats," your ultimate destination for a sonic journey that transcends boundaries and elevates
+                your auditory experience. Immerse yourself in a world where rhythm meets emotion, and melodies weave
+                tales of passion and creativity.
+
+                <br><br>At Beats, we understand the profound impact that music has on our lives. It's more than just
+                sound; it's a language that speaks to the soul. Our website is a haven for music enthusiasts, where we
+                curate a diverse collection of beats and tunes that cater to every taste and mood.
+
+                <br><br>Explore an extensive library of genres, from the soothing melodies of ambient music to the
+                heart-pounding beats of electronic dance. Whether you're searching for the latest chart-toppers or
+                hidden gems from independent artists, Beats is your go-to platform for discovering the sounds that
+                resonate with you.
+
+                <br><br>Discover curated playlists that take you on a musical journey, carefully crafted to evoke
+                specific emotions or set the mood for any occasion. Our team of passionate curators is dedicated to
+                bringing you the best in music, ensuring that each playlist tells a unique story and leaves a lasting
+                impression.
+
+                <br><br>For aspiring musicians and producers, Beats offers a platform to showcase your talent. Submit
+                your own beats, tracks, or compositions, and join a community that celebrates creativity and
+                originality. Our goal is to empower emerging artists and provide them with a platform to share their
+                passion with the world.
+
+                <br><br>Beats is not just a website; it's a community of music lovers coming together to celebrate the
+                universal language of sound. Join us in exploring the endless possibilities of music, where every beat
+                has a story to tell, and every note carries the power to inspire, uplift, and connect.
+
+                <br><br>Embark on a musical adventure with Beats – where the rhythm never stops, and the possibilities
+                are as infinite as the notes that fill the air.
+            </p>
+            <h1 class="h1">ABOUT ME</h1>
+            <div class="details">
+                <h1>NAME</h1>
+                <p>CHANDIKA KARTHIKEYA</p>
+                <h1>PHONE NUMBER</h1>
+                <p>+91 6281651134</p>
+                <h1>EMAIL</h1>
+                <p>karthiketalucky5505@gmail.com</p>
+            </div>
+            <div class="blank" style="background-color: black; height: 50vh; width: 100vw;"></div>
+        </div>
+    </center>
+    <script>
+    function scrollWin() {
+        setInterval(function(){ window.scrollBy(0,1); }, 5);
+    }
+    </script>
+</body>
+
+</html>
