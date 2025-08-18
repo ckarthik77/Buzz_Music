@@ -1,0 +1,26 @@
+{
+  "songs": [
+    {
+      "id": 1,
+      "title": "Moonlight",
+      "artist": "XXXTENTACION",
+      "cover": "assets/img/album-covers/Moonlight.jpg",
+      "file": "music/spotifydown.com - Moonlight.mp3"
+    },
+    {
+      "id": 2,
+      "title": "7 years",
+      "artist": "Lukas Graham",
+      "cover": "assets/img/album-covers/7years.jpg",
+      "file": "music/7 years.mp3"
+    },
+    {
+      "id": 3,
+      "title": "One Dance",
+      "artist": "Drake",
+      "cover": "assets/img/album-covers/onedance.jpg",
+      "file": "music/One dance.mp3"
+    }
+    // Add more songs here following the same format
+  ]
+}

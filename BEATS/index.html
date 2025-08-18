@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <title>BEATS - Music Player</title>
+</head>
+<body>
+    <div class="bg"><img src="assets/img/album-covers/ukelele.jpg" alt="Background"></div>
+    <div class="nav">
+        <h1>BEATS</h1>
+        <div class="nav-li">
+            <li><a href="pages/library/">LIBRARY</a></li>
+            <li><a href="pages/contact/">CONTACT US</a></li>
+            <li><a href="pages/auth/">LOGIN</a></li>
+            <input type="search" placeholder="Search...">
+        </div>
+    </div>
+    <div class="cont">
+        <div class="music-cont">
+            <img id="songimg" src="assets/img/album-covers/Moonlight.jpg" alt="Album Cover">
+            <div class="song-desc">
+                <center>
+                    <h1 id="songname">Moonlight</h1>
+                    <h2 id="singer">- XXXTENTACION</h2>
+                </center>
+            </div>
+            <div class="audio">
+                <div class="audio-player">
+                    <audio controls>
+                        <source id="song" src="music/spotifydown.com - Moonlight.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/app.js"></script>
+</body>
+</html>
