@@ -1,0 +1,57 @@
+{
+  "name": "beats-music-player",
+  "version": "1.0.0",
+  "description": "A modern, responsive music player with a beautiful UI",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server --port=3000 --open="/pages/player"",
+    "dev": "live-server --port=3000 --open="/pages/player" --watch="./"",
+    "build": "echo 'Build process would go here'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write \"**/*.{js,jsx,json,md,html,css}\"",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "music",
+    "player",
+    "web",
+    "audio",
+    "pwa"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "dependencies": {
+    "howler": "^2.2.3",
+    "jsmediatags": "^3.9.7"
+  },
+  "devDependencies": {
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-html": "^7.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 1%",
+    "not dead"
+  ],
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,html,css}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  }
+}

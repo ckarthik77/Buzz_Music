@@ -1,0 +1,73 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Markdown files
+[*.md]
+trim_trailing_whitespace = false
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# YAML files
+[*.{yml,yaml}]
+indent_size = 2
+
+# HTML files
+[*.html]
+indent_size = 2
+
+# CSS files
+[*.css]
+indent_size = 2
+
+# JavaScript/TypeScript files
+[*.{js,jsx,ts,tsx}]
+indent_size = 2
+
+# Makefiles use tabs
+[Makefile]
+indent_style = tab
+
+# Batch files use CRLF
+[*.{cmd,bat}]
+end_of_line = crlf
+
+# Shell scripts
+[*.sh]
+indent_size = 2
+
+# Git commit messages
+[COMMIT_EDITMSG]
+trim_trailing_whitespace = false
+
+# Ignore package-lock.json and yarn.lock
+[package-lock.json]
+indent_size = 0
+insert_final_newline = false
+
+[yarn.lock]
+indent_size = 0
+insert_final_newline = false
+
+# Ignore minified files
+[*.min.js]
+indent_size = 0
+insert_final_newline = false
+
+# Ignore images and binary files
+[*.{png,jpg,jpeg,gif,ico,svg,woff,woff2,ttf,eot,otf}]
+indent_size = 0
+insert_final_newline = false
+trim_trailing_whitespace = false

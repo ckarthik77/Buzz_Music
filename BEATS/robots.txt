@@ -1,0 +1,28 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://yourdomain.com/sitemap.xml
+
+# Disallow crawling of admin and private directories
+Disallow: /admin/
+Disallow: /private/
+Disallow: /api/
+
+# Allow all other pages
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+
+# Crawl-delay: 10
+
+# User-agent: Googlebot-Image
+# Disallow: /*.jpg$
+
+# User-agent: Googlebot-Mobile
+# Allow: /

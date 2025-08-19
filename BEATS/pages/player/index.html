@@ -1,53 +1,228 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
+    <!-- Primary Meta Tags -->
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BEATS - Music Player</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+    <meta name="description" content="BEATS - A modern, responsive, and accessible web music player with a beautiful UI and offline support">
+    <meta name="keywords" content="music, player, web, audio, PWA, beats, streaming, playlist">
+    <meta name="author" content="Your Name">
+    <meta name="theme-color" content="#1DB954">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook / Twitter / Social Media Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/pages/player/">
+    <meta property="og:title" content="BEATS - Modern Music Player">
+    <meta property="og:description" content="A beautiful, responsive, and feature-rich web-based music player with a modern UI inspired by popular streaming services.">
+    <meta property="og:image" content="https://yourdomain.com/assets/img/social-preview.jpg">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://yourdomain.com/pages/player/">
+    <meta name="twitter:title" content="BEATS - Modern Music Player">
+    <meta name="twitter:description" content="A beautiful, responsive, and feature-rich web-based music player with a modern UI inspired by popular streaming services.">
+    <meta name="twitter:image" content="https://yourdomain.com/assets/img/social-preview.jpg">
+    
+    <!-- PWA / Web App Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="BEATS">
+    <link rel="apple-touch-icon" href="/assets/img/icons/apple-touch-icon.png">
+    <link rel="mask-icon" href="/assets/img/icons/safari-pinned-tab.svg" color="#1DB954">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/icons/favicon-16x16.png">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/apple-touch-icon.png">
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#1DB954">
+    <meta name="msapplication-TileImage" content="/assets/img/icons/mstile-144x144.png">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+    
+    <!-- Theme Color for Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#1DB954" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+    
+    <!-- Apple Web App Title -->
+    <meta name="apple-mobile-web-app-title" content="BEATS">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://yourdomain.com/pages/player/" />
+    
+    <!-- Title -->
+    <title>BEATS - Modern Music Player</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap">
     <link rel="stylesheet" href="../../assets/css/player.css">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="../../assets/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/Montserrat-Medium.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/Montserrat-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin>
 </head>
 <body>
-    <div class="bg"><img src="../../assets/img/album-covers/ukelele.jpg" alt="Background"></div>
-    <div class="nav">
-        <h1>BEATS</h1>
-        <div class="nav-li">
-            <li><a href="../library/">LIBRARY</a></li>
-            <li><a href="../contact/">CONTACT US</a></li>
-            <li><a href="../auth/">LOGIN</a></li>
-            <input type="search" id="searchInput" placeholder="Search songs...">
-        </div>
+    <!-- Background with dynamic blur -->
+    <div class="bg">
+        <img src="../../assets/img/album-covers/default-bg.jpg" alt="Background" id="backgroundImage">
     </div>
 
-    <div class="player-container">
-        <div class="song-info">
-            <img id="songImg" src="" alt="Album Cover" class="album-art">
-            <h1 id="songTitle">Select a song</h1>
-            <p id="songArtist">-</p>
+    <!-- Navigation Bar -->
+    <nav class="nav" aria-label="Main navigation">
+        <div class="nav-brand">
+            <h1>BEATS</h1>
         </div>
+        <div class="nav-links" role="navigation">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="../library/" class="nav-link" aria-current="page">Home</a></li>
+                <li class="nav-item"><a href="../library/" class="nav-link">Library</a></li>
+                <li class="nav-item"><a href="../contact/" class="nav-link">Contact</a></li>
+                <li class="nav-item">
+                    <div class="search-container">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="search" id="searchInput" class="search-input" 
+                               placeholder="Search songs..." aria-label="Search songs">
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <button id="themeToggle" class="btn btn-icon" aria-label="Toggle theme">
+                        <i class="fas fa-moon"></i>
+                        <span class="sr-only">Toggle theme</span>
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <a href="../auth/" class="btn btn-login" aria-label="Login">
+                        <i class="fas fa-user"></i> Login
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <button class="hamburger" aria-label="Menu" aria-expanded="false">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+        </button>
+    </nav>
 
-        <div class="player-controls">
-            <audio id="audioPlayer"></audio>
-            <div class="progress-container">
-                <span id="currentTime">0:00</span>
-                <input type="range" id="progressBar" value="0">
-                <span id="duration">0:00</span>
-            </div>
-            <div class="controls">
-                <button id="prevBtn">⏮</button>
-                <button id="playPauseBtn">▶</button>
-                <button id="nextBtn">⏭</button>
-            </div>
-            <div class="volume-control">
-                <span>🔈</span>
-                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.8">
-            </div>
-        </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="player-container">
+            <!-- Now Playing Section -->
+            <section class="now-playing" aria-labelledby="now-playing-title">
+                <div class="album-art-container">
+                    <img id="songImg" src="" alt="Album Cover" class="album-art">
+                    <div class="album-art-overlay">
+                        <button id="playOverlayBtn" aria-label="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="song-info">
+                    <h1 id="songTitle" class="song-title">No Song Selected</h1>
+                    <p id="songArtist" class="song-artist">-</p>
+                    <p id="songAlbum" class="song-album">-</p>
+                    <div class="song-meta">
+                        <span id="songYear" class="song-year">-</span>
+                        <span id="songGenre" class="song-genre">-</span>
+                    </div>
+                    <div class="album-details">
+                        <span id="songDuration" class="song-duration">0:00</span>
+                    </div>
+                </div>
+            </section>
 
-        <div class="playlist" id="playlist">
-            <!-- Songs will be loaded here by JavaScript -->
+            <!-- Player Controls -->
+            <section class="player-controls" aria-label="Player controls">
+                <audio id="audioPlayer" preload="metadata"></audio>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <span id="currentTime" class="time" aria-hidden="true">0:00</span>
+                    <div class="progress-bar-container">
+                        <input type="range" id="progressBar" class="progress-bar" 
+                               min="0" value="0" step="0.1" 
+                               aria-label="Song progress" aria-valuemin="0" 
+                               aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-bar-bg" role="presentation"></div>
+                    </div>
+                    <span id="duration" class="time" aria-hidden="true">0:00</span>
+                </div>
+
+                <!-- Main Controls -->
+                <div class="controls">
+                    <button id="shuffleBtn" class="control-btn" aria-label="Shuffle">
+                        <i class="fas fa-random"></i>
+                    </button>
+                    <button id="prevBtn" class="control-btn" aria-label="Previous song">
+                        <i class="fas fa-step-backward"></i>
+                    </button>
+                    <button id="playPauseBtn" class="control-btn play-btn" aria-label="Play/Pause">
+                        <i class="fas fa-play play-icon"></i>
+                        <i class="fas fa-pause pause-icon"></i>
+                    </button>
+                    <button id="nextBtn" class="control-btn" aria-label="Next song">
+                        <i class="fas fa-step-forward"></i>
+                    </button>
+                    <button id="repeatBtn" class="control-btn" aria-label="Repeat" aria-pressed="false">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                </div>
+
+                <!-- Volume Control -->
+                <div class="volume-control">
+                    <button id="muteBtn" class="volume-btn" aria-label="Mute">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <div class="volume-slider-container">
+                        <input type="range" id="volumeControl" class="volume-slider" 
+                               min="0" max="1" step="0.01" value="0.8" 
+                               aria-label="Volume control">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Playlist Section -->
+            <section class="playlist-section" aria-labelledby="playlist-title">
+                <div class="playlist-header">
+                    <h2 id="playlist-title">Playlist</h2>
+                    <span id="playlistCount" class="playlist-count">0 songs</span>
+                </div>
+                <div class="playlist-container">
+                    <div id="playlist" class="playlist" role="listbox" aria-label="Songs playlist">
+                        <!-- Songs will be loaded here by JavaScript -->
+                        <div class="empty-playlist">
+                            <i class="fas fa-music"></i>
+                            <p>Your playlist is empty</p>
+                            <button id="addSongsBtn" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Add Songs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
+    </main>
+
+    <!-- Audio Visualizer -->
+    <canvas id="visualizer" class="audio-visualizer" aria-hidden="true"></canvas>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading your music...</p>
     </div>
 
-    <script src="../../assets/js/player.js"></script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/howler@2.2.3/dist/howler.min.js"></script>
+    <script src="../../assets/js/player.js" type="module"></script>
 </body>
 </html>

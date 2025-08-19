@@ -4,23 +4,89 @@
       "id": 1,
       "title": "Moonlight",
       "artist": "XXXTENTACION",
+      "album": "?",
+      "year": 2018,
+      "genre": "Hip-Hop/Rap",
+      "duration": 132,
       "cover": "assets/img/album-covers/Moonlight.jpg",
       "file": "music/spotifydown.com - Moonlight.mp3"
     },
     {
       "id": 2,
-      "title": "7 years",
+      "title": "7 Years",
       "artist": "Lukas Graham",
+      "album": "Lukas Graham (Blue Album)",
+      "year": 2015,
+      "genre": "Pop",
+      "duration": 238,
       "cover": "assets/img/album-covers/7years.jpg",
       "file": "music/7 years.mp3"
     },
     {
       "id": 3,
       "title": "One Dance",
-      "artist": "Drake",
+      "artist": "Drake ft. WizKid & Kyla",
+      "album": "Views",
+      "year": 2016,
+      "genre": "Dancehall",
+      "duration": 173,
       "cover": "assets/img/album-covers/onedance.jpg",
       "file": "music/One dance.mp3"
+    },
+    {
+      "id": 4,
+      "title": "Blinding Lights",
+      "artist": "The Weeknd",
+      "album": "After Hours",
+      "year": 2020,
+      "genre": "Synthwave",
+      "duration": 203,
+      "cover": "assets/img/album-covers/afterhours.jpg",
+      "file": "music/Blinding Lights.mp3"
+    },
+    {
+      "id": 5,
+      "title": "Shape of You",
+      "artist": "Ed Sheeran",
+      "album": "÷ (Divide)",
+      "year": 2017,
+      "genre": "Pop",
+      "duration": 233,
+      "cover": "assets/img/album-covers/divide.jpg",
+      "file": "music/Shape of You.mp3"
+    },
+    {
+      "id": 6,
+      "title": "Dance Monkey",
+      "artist": "Tones and I",
+      "album": "The Kids Are Coming",
+      "year": 2019,
+      "genre": "Pop",
+      "duration": 210,
+      "cover": "assets/img/album-covers/kidsarecoming.jpg",
+      "file": "music/Dance Monkey.mp3"
+    },
+    {
+      "id": 7,
+      "title": "Stay",
+      "artist": "The Kid LAROI & Justin Bieber",
+      "album": "F*CK LOVE 3: OVER YOU",
+      "year": 2021,
+      "genre": "Pop",
+      "duration": 138,
+      "cover": "assets/img/album-covers/fcklove3.jpg",
+      "file": "music/Stay.mp3"
+    },
+    {
+      "id": 8,
+      "title": "Believer",
+      "artist": "Imagine Dragons",
+      "album": "Evolve",
+      "year": 2017,
+      "genre": "Alternative Rock",
+      "duration": 204,
+      "cover": "assets/img/album-covers/evolve.jpg",
+      "file": "music/Believer.mp3"
     }
-    // Add more songs here following the same format
   ]
 }
