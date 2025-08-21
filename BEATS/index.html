@@ -95,9 +95,21 @@
                         Your browser does not support the audio element.
                     </audio>
                     <div class="player-controls">
-                        <button id="prevBtn" class="control-btn">⏮</button>
-                        <button id="playPauseBtn" class="control-btn">►</button>
-                        <button id="nextBtn" class="control-btn">⏭</button>
+                        <button id="shuffleBtn" class="control-btn" title="Shuffle">
+                            <i class="fas fa-random"></i>
+                        </button>
+                        <button id="prevBtn" class="control-btn" title="Previous">
+                            <i class="fas fa-step-backward"></i>
+                        </button>
+                        <button id="playPauseBtn" class="control-btn play-pause-btn" title="Play/Pause">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button id="nextBtn" class="control-btn" title="Next">
+                            <i class="fas fa-step-forward"></i>
+                        </button>
+                        <button id="repeatBtn" class="control-btn" title="Repeat Off">
+                            <i class="fas fa-redo"></i>
+                        </button>
                     </div>
                     <div class="progress-container">
                         <span id="currentTime">0:00</span>

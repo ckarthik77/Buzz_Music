@@ -29,15 +29,16 @@ const elements = {
     visualizer: document.getElementById('visualizer'),
 };
 
-// Player state
+// Initialize player state
 const state = {
     songs: [],
     filteredSongs: [],
     currentSongIndex: 0,
+    originalSongIndex: 0, // To track position in original playlist when shuffling
     isPlaying: false,
     isMuted: false,
     isShuffled: false,
-    isRepeating: false,
+    repeatMode: false, // false, 'all', or 'one'
     volume: 0.8,
     lastVolume: 0.8,
     audioContext: null,
@@ -45,6 +46,8 @@ const state = {
     dataArray: null,
     animationFrameId: null,
     currentHowl: null,
+    shuffledSongs: [], // Store the shuffled playlist
+    lastPlaybackPosition: 0, // For resuming playback
 };
 
 // Initialize player
@@ -286,29 +289,107 @@ function togglePlay() {
 
 // Play previous song
 function playPrevious() {
+    if (state.songs.length === 0) return;
+    
+    // If we're more than 3 seconds into the song, go to the beginning
     if (state.currentHowl && state.currentHowl.seek() > 3) {
-        // If more than 3 seconds into the song, restart it
         state.currentHowl.seek(0);
-        updateProgress();
+        showToast('Restarted current song');
+        return;
+    }
+    
+    let prevIndex;
+    let prevSong;
+    
+    if (state.isShuffled && state.shuffledSongs?.length > 0) {
+        // Get previous song in shuffled playlist
+        prevIndex = (state.currentSongIndex - 1 + state.shuffledSongs.length) % state.shuffledSongs.length;
+        prevSong = state.shuffledSongs[prevIndex];
+        const originalIndex = state.songs.findIndex(song => song.id === prevSong.id);
+        
+        if (originalIndex !== -1) {
+            loadSong(originalIndex);
+        } else {
+            // Fallback to sequential if song not found
+            prevIndex = (state.currentSongIndex - 1 + state.songs.length) % state.songs.length;
+            loadSong(prevIndex);
+        }
     } else {
-        // Go to previous song
-        let newIndex = state.currentSongIndex - 1;
-        if (newIndex < 0) newIndex = state.songs.length - 1;
-        loadSong(newIndex);
+        // Normal sequential playback
+        prevIndex = (state.currentSongIndex - 1 + state.songs.length) % state.songs.length;
+        
+        // Handle beginning of playlist
+        if (prevIndex === state.songs.length - 1 && state.repeatMode !== 'all') {
+            // Already at the beginning, just restart the current song
+            if (state.currentHowl) {
+                state.currentHowl.seek(0);
+                showToast('Beginning of playlist');
+            }
+            return;
+        }
+        
+        loadSong(prevIndex);
+    }
+    
+    // Update the original song index when in shuffle mode
+    if (state.isShuffled && prevSong) {
+        state.originalSongIndex = state.songs.findIndex(song => song.id === prevSong.id);
     }
 }
 
 // Play next song
-function playNext() {
-    let newIndex = state.currentSongIndex + 1;
-    if (newIndex >= state.songs.length) {
-        if (state.isRepeating) {
-            newIndex = 0; // Loop to start if repeating
-        } else {
-            return; // End of playlist
+function playNext(manual = true) {
+    if (state.songs.length === 0) return;
+    
+    // If repeat one is on and this was a manual next, just restart the current song
+    if (state.repeatMode === 'one' && manual) {
+        if (state.currentHowl) {
+            state.currentHowl.seek(0);
+            state.currentHowl.play();
+            showToast('Repeating current song');
         }
+        return;
     }
-    loadSong(newIndex);
+    
+    let nextIndex;
+    let nextSong;
+    
+    if (state.isShuffled && state.shuffledSongs?.length > 0) {
+        // Get next song in shuffled playlist
+        nextIndex = (state.currentSongIndex + 1) % state.shuffledSongs.length;
+        nextSong = state.shuffledSongs[nextIndex];
+        const originalIndex = state.songs.findIndex(song => song.id === nextSong.id);
+        
+        if (originalIndex !== -1) {
+            loadSong(originalIndex);
+        } else {
+            // Fallback to sequential if song not found
+            nextIndex = (state.currentSongIndex + 1) % state.songs.length;
+            loadSong(nextIndex);
+        }
+    } else {
+        // Normal sequential playback
+        nextIndex = (state.currentSongIndex + 1) % state.songs.length;
+        
+        // Handle end of playlist
+        if (nextIndex === 0 && state.repeatMode !== 'all') {
+            // End of playlist, stop playing if not repeating all
+            if (state.currentHowl) {
+                state.currentHowl.stop();
+                state.isPlaying = false;
+                updatePlayPauseButton();
+                showToast('End of playlist');
+            }
+            return;
+        }
+        
+        loadSong(nextIndex);
+    }
+    
+    // Update the original song index when in shuffle mode
+    if (state.isShuffled && nextSong) {
+        state.originalSongIndex = state.songs.findIndex(song => song.id === nextSong.id);
+    }
 }
 
 // Update progress bar
@@ -382,23 +463,75 @@ function toggleMute() {
 // Toggle shuffle
 function toggleShuffle() {
     state.isShuffled = !state.isShuffled;
-    elements.shuffleBtn.classList.toggle('active', state.isShuffled);
+    const shuffleBtn = elements.shuffleBtn;
     
-    if (state.isShuffled) {
-        // Shuffle the filtered songs
-        shuffleArray(state.filteredSongs);
-    } else {
-        // Reset to original order
-        state.filteredSongs = [...state.songs];
+    if (shuffleBtn) {
+        if (state.isShuffled) {
+            // Enable shuffle
+            shuffleBtn.classList.add('active');
+            shuffleBtn.title = 'Shuffle On';
+            
+            // Create and save shuffled playlist
+            state.shuffledSongs = [...state.songs];
+            const currentSong = state.songs[state.currentSongIndex];
+            
+            // Keep current song first in shuffled list
+            const currentIndex = state.shuffledSongs.findIndex(song => song.id === currentSong.id);
+            if (currentIndex > -1) {
+                state.shuffledSongs.splice(currentIndex, 1);
+            }
+            
+            shuffleArray(state.shuffledSongs);
+            state.shuffledSongs.unshift(currentSong);
+            state.originalSongIndex = state.currentSongIndex;
+            state.currentSongIndex = 0;
+            
+            showToast('Shuffle: On');
+        } else {
+            // Disable shuffle
+            shuffleBtn.classList.remove('active');
+            shuffleBtn.title = 'Shuffle Off';
+            
+            // Restore original position
+            if (typeof state.originalSongIndex !== 'undefined') {
+                state.currentSongIndex = state.originalSongIndex;
+            }
+            
+            showToast('Shuffle: Off');
+        }
+        
+        updateActiveSong();
     }
-    
-    renderPlaylist();
 }
 
 // Toggle repeat
 function toggleRepeat() {
-    state.isRepeating = !state.isRepeating;
-    elements.repeatBtn.classList.toggle('active', state.isRepeating);
+    const repeatBtn = elements.repeatBtn;
+    if (!repeatBtn) return;
+    
+    // Cycle through repeat modes: off → all → one → off
+    if (!state.repeatMode) {
+        // Turn on repeat all
+        state.repeatMode = 'all';
+        repeatBtn.classList.add('active');
+        repeatBtn.title = 'Repeat All';
+        repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+        showToast('Repeat: All');
+    } else if (state.repeatMode === 'all') {
+        // Switch to repeat one
+        state.repeatMode = 'one';
+        repeatBtn.classList.add('active');
+        repeatBtn.title = 'Repeat One';
+        repeatBtn.innerHTML = '<i class="fas fa-redo" style="font-size: 0.8em; font-weight: bold;">1</i>';
+        showToast('Repeat: One');
+    } else {
+        // Turn off repeat
+        state.repeatMode = false;
+        repeatBtn.classList.remove('active');
+        repeatBtn.title = 'Repeat Off';
+        repeatBtn.innerHTML = '<i class="fas fa-redo"></i>';
+        showToast('Repeat: Off');
+    }
 }
 
 // Helper function to shuffle array
