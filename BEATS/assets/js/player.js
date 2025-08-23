@@ -3,98 +3,138 @@ import { Howl, Howler } from 'howler';
 
 // DOM Elements
 const elements = {
-    audioPlayer: document.getElementById('audioPlayer'),
+    // Player controls
     playPauseBtn: document.getElementById('playPauseBtn'),
     prevBtn: document.getElementById('prevBtn'),
     nextBtn: document.getElementById('nextBtn'),
     shuffleBtn: document.getElementById('shuffleBtn'),
     repeatBtn: document.getElementById('repeatBtn'),
-    muteBtn: document.getElementById('muteBtn'),
+    volumeSlider: document.getElementById('volumeSlider'),
+    
+    // Progress bar
     progressBar: document.getElementById('progressBar'),
+    progressContainer: document.getElementById('progressContainer'),
     currentTimeEl: document.getElementById('currentTime'),
     durationEl: document.getElementById('duration'),
-    volumeControl: document.getElementById('volumeControl'),
-    songImg: document.getElementById('songImg'),
-    backgroundImage: document.getElementById('backgroundImage'),
+    
+    // Song info
     songTitle: document.getElementById('songTitle'),
-    songArtist: document.getElementById('songArtist'),
-    albumName: document.getElementById('albumName'),
-    songYear: document.getElementById('songYear'),
+    artistName: document.getElementById('artistName'),
+    albumArt: document.getElementById('albumArt'),
+    
+    // Playlist
     playlistEl: document.getElementById('playlist'),
-    playlistCount: document.getElementById('playlistCount'),
-    searchInput: document.getElementById('searchInput'),
-    addSongsBtn: document.getElementById('addSongsBtn'),
-    loadingOverlay: document.getElementById('loadingOverlay'),
-    toast: document.getElementById('toast'),
-    visualizer: document.getElementById('visualizer'),
+    
+    // Theme
+    themeToggle: document.getElementById('themeToggle'),
+    
+    // Loading screen
+    loadingScreen: document.getElementById('loadingScreen'),
+    mainContent: document.querySelector('.main-content'),
+    
+    // Audio
+    audioElement: document.getElementById('audioElement'),
+    
+    // Toast
+    toast: null
 };
 
 // Initialize player state
 const state = {
+    // Playback state
     songs: [],
     filteredSongs: [],
     currentSongIndex: 0,
-    originalSongIndex: 0, // To track position in original playlist when shuffling
+    originalSongIndex: 0,
     isPlaying: false,
     isMuted: false,
     isShuffled: false,
     repeatMode: false, // false, 'all', or 'one'
-    volume: 0.8,
-    lastVolume: 0.8,
+    volume: 0.7,
+    lastVolume: 0.7,
+    
+    // Audio context for visualizations
     audioContext: null,
     analyser: null,
     dataArray: null,
     animationFrameId: null,
+    
+    // Current audio
     currentHowl: null,
-    shuffledSongs: [], // Store the shuffled playlist
-    lastPlaybackPosition: 0, // For resuming playback
+    shuffledSongs: [],
+    
+    // UI state
+    isDraggingProgress: false,
+    
+    // Sample songs (will be replaced with actual data)
+    sampleSongs: [
+        {
+            id: 1,
+            title: 'Moonlight',
+            artist: 'XXXTENTACION',
+            album: '?',
+            cover: 'assets/img/album-covers/Moonlight.jpg',
+            src: 'music/spotifydown.com - Moonlight.mp3',
+            duration: '2:15'
+        },
+        {
+            id: 2,
+            title: 'SAD!',
+            artist: 'XXXTENTACION',
+            album: '?',
+            cover: 'assets/img/album-covers/SAD.jpg',
+            src: 'music/spotifydown.com - SAD!.mp3',
+            duration: '2:46'
+        },
+        // Add more sample songs as needed
+    ]
 };
 
 // Initialize player
-async function initPlayer() {
+function initPlayer() {
     try {
-        showLoading(true, 'Loading your music...');
-        
-        // Load songs from JSON
-        const response = await fetch('../../assets/data/songs.json');
-        const data = await response.json();
-        
-        // Process songs data
-        state.songs = data.songs.map((song, index) => ({
-            ...song,
-            id: song.id || `song-${index + 1}`,
-            year: song.year || new Date().getFullYear(),
-            duration: 0, // Will be updated when loaded
-            howl: null, // Will store Howl instance
-        }));
-        
+        // Use sample songs for now
+        state.songs = [...state.sampleSongs];
         state.filteredSongs = [...state.songs];
+        
+        if (state.songs.length === 0) {
+            showToast('No songs found. Please add some music!', 'error');
+            return;
+        }
+        
+        // Set initial volume
+        if (elements.volumeSlider) {
+            elements.volumeSlider.value = state.volume * 100;
+        }
         
         // Initialize audio context for visualizer
         initAudioContext();
         
-        // Render playlist
-        renderPlaylist();
-        
-        // Load first song if available
-        if (state.songs.length > 0) {
-            await loadSong(0);
-        }
-        
         // Set up event listeners
         setupEventListeners();
         
-        // Update UI
-        updatePlaylistCount();
-        showLoading(false);
+        // Render playlist
+        renderPlaylist();
         
-        // Show welcome message
-        showToast('Welcome to BEATS Music Player');
+        // Load first song
+        loadSong(0);
+        
+        // Hide loading screen after a short delay
+        setTimeout(() => {
+            if (elements.loadingScreen) {
+                elements.loadingScreen.classList.add('hidden');
+            }
+            if (elements.mainContent) {
+                elements.mainContent.classList.remove('hidden');
+            }
+        }, 1500);
         
     } catch (error) {
         console.error('Error initializing player:', error);
-        showToast('Failed to initialize player', 'error');
-        showLoading(false);
+        showToast('Failed to initialize player. Please refresh the page.', 'error');
+        if (elements.loadingScreen) {
+            elements.loadingScreen.classList.add('hidden');
+        }
     }
 }
 
@@ -197,51 +237,145 @@ function updatePlaylistCount() {
 
 // Set up event listeners
 function setupEventListeners() {
-    const { 
-        playPauseBtn, prevBtn, nextBtn, progressBar, 
-        volumeControl, searchInput, shuffleBtn, 
-        repeatBtn, muteBtn, addSongsBtn 
-    } = elements;
-    
-    // Play/Pause
-    playPauseBtn.addEventListener('click', togglePlay);
-    
-    // Previous/Next
-    prevBtn.addEventListener('click', playPrevious);
-    nextBtn.addEventListener('click', playNext);
-    
-    // Progress bar
-    progressBar.addEventListener('input', updateProgress);
-    progressBar.addEventListener('change', seek);
-    
-    // Volume control
-    volumeControl.addEventListener('input', setVolume);
-    
-    // Shuffle/Repeat
-    if (shuffleBtn) shuffleBtn.addEventListener('click', toggleShuffle);
-    if (repeatBtn) repeatBtn.addEventListener('click', toggleRepeat);
-    
-    // Mute
-    if (muteBtn) muteBtn.addEventListener('click', toggleMute);
-    
-    // Search
-    if (searchInput) {
-        searchInput.addEventListener('input', debounce(handleSearch, 300));
+    // Play/Pause button
+    if (elements.playPauseBtn) {
+        elements.playPauseBtn.addEventListener('click', togglePlay);
     }
     
-    // Add songs
-    if (addSongsBtn) {
-        addSongsBtn.addEventListener('click', handleAddSongs);
+    // Previous button
+    if (elements.prevBtn) {
+        elements.prevBtn.addEventListener('click', playPrevious);
+    }
+    
+    // Next button
+    if (elements.nextBtn) {
+        elements.nextBtn.addEventListener('click', () => playNext(true));
+    }
+    
+    // Shuffle button
+    if (elements.shuffleBtn) {
+        elements.shuffleBtn.addEventListener('click', toggleShuffle);
+    }
+    
+    // Repeat button
+    if (elements.repeatBtn) {
+        elements.repeatBtn.addEventListener('click', toggleRepeat);
+    }
+    
+    // Progress bar
+    if (elements.progressContainer) {
+        // Click to seek
+        elements.progressContainer.addEventListener('click', seek);
+        
+        // Drag handle
+        const progressBar = elements.progressContainer.querySelector('.progress-bar');
+        const handle = elements.progressContainer.querySelector('.progress-handle');
+        
+        if (progressBar && handle) {
+            // Mouse down on handle
+            handle.addEventListener('mousedown', (e) => {
+                state.isDraggingProgress = true;
+                e.stopPropagation();
+            });
+            
+            // Mouse up anywhere
+            document.addEventListener('mouseup', () => {
+                if (state.isDraggingProgress) {
+                    state.isDraggingProgress = false;
+                    // Seek to the new position
+                    if (state.currentHowl) {
+                        const progressBar = elements.progressContainer.querySelector('.progress-bar');
+                        const rect = progressBar.getBoundingClientRect();
+                        const pos = (state.currentHowl.seek() / state.currentHowl.duration()) * 100;
+                        progressBar.style.width = `${pos}%`;
+                    }
+                }
+            });
+            
+            // Mouse move for dragging
+            document.addEventListener('mousemove', (e) => {
+                if (state.isDraggingProgress && state.currentHowl) {
+                    const progressBar = elements.progressContainer.querySelector('.progress-bar');
+                    const rect = elements.progressContainer.getBoundingClientRect();
+                    let pos = ((e.clientX - rect.left) / rect.width) * 100;
+                    
+                    // Keep within bounds
+                    pos = Math.max(0, Math.min(100, pos));
+                    
+                    // Update progress bar
+                    progressBar.style.width = `${pos}%`;
+                    
+                    // Update time display
+                    const duration = state.currentHowl.duration();
+                    const currentTime = (pos / 100) * duration;
+                    if (elements.currentTimeEl) {
+                        elements.currentTimeEl.textContent = formatTime(currentTime);
+                    }
+                }
+            });
+        }
+    }
+    
+    // Volume control
+    if (elements.volumeSlider) {
+        elements.volumeSlider.addEventListener('input', (e) => {
+            state.volume = parseFloat(e.target.value) / 100;
+            if (state.currentHowl) {
+                state.currentHowl.volume(state.volume);
+            }
+            
+            // Update mute state if needed
+            if (state.volume === 0) {
+                state.isMuted = true;
+            } else {
+                state.isMuted = false;
+                state.lastVolume = state.volume;
+            }
+            
+            updateMuteButton();
+        });
     }
     
     // Keyboard shortcuts
-    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', (e) => {
+        // Space to play/pause
+        if (e.code === 'Space') {
+            e.preventDefault();
+            togglePlay();
+        }
+        
+        // Left/Right arrow keys for seeking
+        if (state.currentHowl) {
+            if (e.code === 'ArrowLeft') {
+                const currentTime = state.currentHowl.seek() - 5; // Seek back 5 seconds
+                state.currentHowl.seek(Math.max(0, currentTime));
+                updateProgress();
+            } else if (e.code === 'ArrowRight') {
+                const currentTime = state.currentHowl.seek() + 5; // Seek forward 5 seconds
+                const duration = state.currentHowl.duration();
+                state.currentHowl.seek(Math.min(duration, currentTime));
+                updateProgress();
+            }
+        }
+        
+        // M key to toggle mute
+        if (e.code === 'KeyM') {
+            toggleMute();
+        }
+        
+        // L key to toggle repeat
+        if (e.code === 'KeyL') {
+            toggleRepeat();
+        }
+        
+        // S key to toggle shuffle
+        if (e.code === 'KeyS') {
+            toggleShuffle();
+        }
+    });
     
     // Handle window resize
-    window.addEventListener('resize', handleResize);
-    
-    // Handle drag and drop for song files
-    setupDragAndDrop();
+    window.addEventListener('resize', debounce(handleResize, 200));
 }
 
 // Debounce function for search
