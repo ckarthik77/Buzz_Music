@@ -141,6 +141,22 @@ function initPlayer() {
 // Initialize audio context for visualizer
 function initAudioContext() {
     try {
+        // Create audio context if not already created
+        if (!state.audioContext) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            state.audioContext = new AudioContext();
+            
+            // Create analyser node
+            state.analyser = state.audioContext.createAnalyser();
+            state.analyser.fftSize = 256;
+            
+            // Create data array for frequency data
+            const bufferLength = state.analyser.frequencyBinCount;
+            state.dataArray = new Uint8Array(bufferLength);
+            
+            // Set up visualizer
+            setupVisualizer();
+        }
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         state.audioContext = new AudioContext();
         
@@ -148,9 +164,102 @@ function initAudioContext() {
         state.analyser = state.audioContext.createAnalyser();
         state.analyser.fftSize = 256;
         
-        const bufferLength = state.analyser.frequencyBinCount;
-        state.dataArray = new Uint8Array(bufferLength);
+        // Setup visualizer canvas
+        function setupVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            if (!canvas) return;
+            
+            const canvasCtx = canvas.getContext('2d');
+            const width = canvas.width = canvas.offsetWidth;
+            const height = canvas.height = canvas.offsetHeight;
+            const barCount = 64;
+            const barWidth = (width / barCount) * 0.6;
+            const barSpacing = width / barCount - barWidth;
+            
+            // Store visualization data
+            state.visualizer = {
+                canvas,
+                ctx: canvasCtx,
+                width,
+                height,
+                barCount,
+                barWidth,
+                barSpacing,
+                lastUpdate: 0,
+                smoothing: 0.7,
+                lastBars: new Array(barCount).fill(0)
+            };
+            
+            // Start the visualization
+            animateVisualizer();
+        }
         
+        // Animate the visualizer
+        function animateVisualizer() {
+            if (!state.analyser || !state.visualizer) return;
+            
+            const { ctx, width, height, barCount, barWidth, barSpacing, lastBars, smoothing } = state.visualizer;
+            const now = Date.now();
+            
+            // Throttle updates to ~60fps
+            if (now - state.visualizer.lastUpdate < 16) {
+                requestAnimationFrame(animateVisualizer);
+                return;
+            }
+            state.visualizer.lastUpdate = now;
+            
+            // Get frequency data
+            state.analyser.getByteFrequencyData(state.dataArray);
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, width, height);
+            
+            // Draw bars
+            for (let i = 0; i < barCount; i++) {
+                // Get frequency data with logarithmic scaling
+                const index = Math.floor(Math.pow(i / barCount, 0.6) * (state.dataArray.length - 1));
+                let value = state.dataArray[index] / 255;
+                
+                // Apply smoothing
+                value = Math.max(value, lastBars[i] * smoothing);
+                lastBars[i] = value;
+                
+                // Calculate bar height
+                const barHeight = Math.max(2, value * height * 0.8);
+                const x = i * (barWidth + barSpacing);
+                const y = (height - barHeight) / 2;
+                
+                // Create gradient
+                const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                gradient.addColorStop(0, '#1DB954');
+                gradient.addColorStop(0.5, '#1ED760');
+                gradient.addColorStop(1, '#4CAF50');
+                
+                // Draw bar
+                ctx.fillStyle = gradient;
+                ctx.fillRect(x, y, barWidth, barHeight);
+                
+                // Add glow effect
+                ctx.shadowColor = 'rgba(29, 185, 84, 0.7)';
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+                
+                // Reset shadow
+                ctx.shadowBlur = 0;
+            }
+            
+            requestAnimationFrame(animateVisualizer);
+        }
+        
+        // Connect audio nodes when a song is loaded
+        function connectAudioNodes() {
+            if (state.currentHowl && state.analyser && state.audioContext) {
+                const source = state.audioContext.createMediaElementSource(state.currentHowl._sounds[0]._node);
+                source.connect(state.analyser);
+                state.analyser.connect(state.audioContext.destination);
+            }
+        }
         // Start visualizer
         if (elements.visualizer) {
             drawVisualizer();
