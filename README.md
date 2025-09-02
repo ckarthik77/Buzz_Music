@@ -1,4 +1,4 @@
-# 🎵   Buzz Music Player
+# 🎵    Buzz Music Player
 
 A modern, responsive web-based music player with a beautiful UI and seamless playback experience.
 
